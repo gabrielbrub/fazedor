@@ -19,48 +19,47 @@ class HistoricoDAO {
       '$_value INTEGER,'
       '$_isTarefa INTEGER)';
 
-  Future<int> save(Historico historico) async {
+  Future<int> save(Historico registro) async {
     final Database db = await getDatabase();
-    Map<String, dynamic> contactMap = _toMap(historico);
-    return db.insert(_tableName, contactMap);
+    Map<String, dynamic> historicoMap = _toMap(registro);
+    return db.insert(_tableName, historicoMap);
   }
 
   Future<List<Historico>> findAll() async {
     //limpa();
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query(_tableName);
-    List<Historico> historicos = _toList(result);
-    return historicos;
+    List<Historico> registros = _toList(result);
+    return registros;
   }
 
-  Map<String, dynamic> _toMap(Historico historico) {
+  Map<String, dynamic> _toMap(Historico registro) {
     final Map<String, dynamic> historicoMap = Map();
-    historicoMap[_name] = historico.nome;
-    historicoMap[_date] = historico.data;
-    historicoMap[_id] = historico.id;
-    historicoMap[_isTarefa] = historico.isTarefa;
-    historicoMap[_value] = historico.valor;
+    historicoMap[_name] = registro.nome;
+    historicoMap[_date] = registro.data;
+    historicoMap[_id] = registro.id;
+    historicoMap[_isTarefa] = registro.isTarefa;
+    historicoMap[_value] = registro.valor;
     return historicoMap;
   }
 
   List<Historico> _toList(List<Map<String, dynamic>> result) {
-    final List<Historico> historicos = List();
+    final List<Historico> registros = List();
     for (Map<String, dynamic> row in result) {
-      final Historico historico = Historico(
+      final Historico registro = Historico(
         row[_name],
         row[_isTarefa],
         row[_date],
         row[_id],
         row[_value],
       );
-      historicos.add(historico);
+      registros.add(registro);
     }
-    return historicos;
+    return registros;
   }
 
   Future<int> delete(int id) async {
     final Database db = await getDatabase();
-    debugPrint('delete chamado');
     return db.delete(
       _tableName,
       where: 'id = ?',

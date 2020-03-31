@@ -12,8 +12,6 @@ Future<Database> getDatabase() async {
   return openDatabase(
     path,
     onCreate: (db, version) {
-//      db.execute("CREATE TABLE SALDO (valor INTEGER)");
-    //INSERT INTO NAMES2 (id, Name) SELECT id, Name FROM NAMES1; <- update like this
       db.execute(ConfigDAO.tableSaldo);
       db.execute(HistoricoDAO.tableSql);
       db.execute("INSERT INTO SALDO VALUES (0)");
@@ -22,7 +20,7 @@ Future<Database> getDatabase() async {
       debugPrint(db.getVersion().toString());
     },
     version: 5,
-    //onDowngrade: onDatabaseDowngradeDelete,
+//    onDowngrade: onDatabaseDowngradeDelete,
     onUpgrade: (db, oldVersion, newVersion){
 //        db.execute("ALTER TABLE TAREFAS ADD COLUMN descartavel INTEGER");
 //        db.execute("ALTER TABLE RECOMPENSAS ADD COLUMN descartavel INTEGER");

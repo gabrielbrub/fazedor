@@ -1,7 +1,5 @@
 import 'package:fazedor/database/tarefa_dao.dart';
-import 'package:fazedor/screens/lista_tarefas.dart';
 import 'package:flutter/material.dart';
-
 import '../widgets/editor.dart';
 import '../model/tarefa.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
@@ -15,80 +13,6 @@ const _rotuloCampoNome = 'Nome da tarefa';
 const _dicaCampoNome = '';
 
 const _textoBotaoConfirmar = 'Confirmar';
-
-//
-//class EditorTarefa extends StatelessWidget {
-//  Tarefa tarefa;
-//
-//  EditorTarefa(this.tarefa);
-//
-//  final TextEditingController _controladorCampoNome =
-//  TextEditingController();
-//  final TextEditingController _controladorCampoValor = TextEditingController();
-//  final TextEditingController _controladorCampoDescricao = TextEditingController();
-//  final TarefaDAO _dao = TarefaDAO();
-//
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    _controladorCampoNome.text = tarefa.nome;
-//    _controladorCampoValor.text = tarefa.valor.toString();
-//    _controladorCampoDescricao.text = tarefa.descricao;
-//    return Scaffold(
-//        appBar: AppBar(
-//          title: Text(_tituloAppBar),
-//        ),
-//        body: SingleChildScrollView(
-//          child: Column(
-//            children: <Widget>[
-//              Editor(
-//                controlador: _controladorCampoNome,
-//                dica: _dicaCampoNome,
-//                rotulo: _rotuloCampoNome,
-//                tipo: TextInputType.text,
-//              ),
-//              Editor(
-//                dica: _dicaCampoValor,
-//                controlador: _controladorCampoValor,
-//                rotulo: _rotuloCampoValor,
-//                icone: Icons.monetization_on,
-//                tipo: TextInputType.number,
-//              ),
-//              Padding(
-//                padding: const EdgeInsets.all(16.0),
-//                child: SizedBox(
-//                  height: 200,
-//                  child: TextField(
-//                    maxLines: 10,
-//                    controller: _controladorCampoDescricao,
-//                    decoration: InputDecoration(
-//                      border: OutlineInputBorder(),
-//                      labelText: 'Descrição',
-//                    ),
-//                  ),
-//                ),
-//              ),
-//              RaisedButton(
-//                child: Text(_textoBotaoConfirmar),
-//                onPressed: () => _updateTarefa(context),
-//              ),
-//            ],
-//          ),
-//        ));
-//  }
-//
-//  void _updateTarefa(BuildContext context) {
-//    final String nome = _controladorCampoNome.text;
-//    final double valor = double.tryParse(_controladorCampoValor.text);
-//    final String descricao = _controladorCampoDescricao.text;
-//    final int id = tarefa.id;
-//    if (nome != null && valor != null) {
-//      final tarefaSalva = Tarefa(id, nome, descricao, valor.toInt());
-//      _dao.update(tarefaSalva).then((id) => Navigator.pop(context));
-//      //Navigator.pop(context, tarefaSalva);
-//    }
-//  }
-//}
 
 class EditorTarefa extends StatefulWidget {
   Tarefa tarefa;

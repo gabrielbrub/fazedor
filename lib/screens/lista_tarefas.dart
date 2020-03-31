@@ -30,17 +30,14 @@ class TelaProjetoState extends State<TelaProjeto> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('lista de tarefas refeita');
     return FutureBuilder<List<Tarefa>>(
       initialData: List(),
       future: Future.delayed(Duration(milliseconds: 300)).then((value) => widget._dao.findAll()), //widget._dao.findAll(), //
       builder: (context, snapshot) {
             if(snapshot.hasData) {
-              debugPrint('HAS DATA');
               tarefas = snapshot.data;
               if (tarefas.isNotEmpty) {
                 numItems = tarefas.length;
-                debugPrint('TÁ VAZIO NÃO, MEU!');
                 return ListView.builder(
                   itemBuilder: (context, index) {
                     final Tarefa tarefa = tarefas[index];
@@ -50,7 +47,6 @@ class TelaProjetoState extends State<TelaProjeto> {
                           child: InkWell(
                             splashColor: Colors.blue.withAlpha(30),
                             onTap: () {
-                              print('Card tapped:' + tarefa.nome);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

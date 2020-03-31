@@ -8,7 +8,6 @@ import 'package:fazedor/widgets/centered_message.dart';
 import 'package:fazedor/widgets/progress.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import '../database/recompensa_dao.dart';
 
 List<Recompensa> recompensas;
@@ -31,7 +30,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
     int numItems;
     return FutureBuilder<List<Recompensa>>(
       initialData: List(),
-      future: Future.delayed(Duration(milliseconds: 300)).then((value) => _dao.findAll()), //_dao.findAll(),
+      future: Future.delayed(Duration(milliseconds: 300)).then((value) => _dao.findAll()),
       builder: (context, snapshot) {
         if(snapshot.hasData) {
             recompensas = snapshot.data;
@@ -40,7 +39,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Recompensa recompensa = recompensas[index];
-                  return GestureDetector( //antes só instanciava itemprojeto
+                  return GestureDetector(
                     child: Card(
                         child: Dismissible(
                           key: Key(recompensa.id.toString()),
@@ -103,7 +102,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                                 Fluttertoast.showToast(
                                   msg: '${recompensa.nome} não é descartável.',
                                   backgroundColor: Colors.red[400],
-                                  toastLength: Toast.LENGTH_LONG,
+                                  toastLength: Toast.LENGTH_SHORT,
                                   timeInSecForIos: 1,
                                   gravity: ToastGravity.BOTTOM,
                                   textColor: Colors.white,
@@ -137,7 +136,6 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                           child: InkWell(
                             splashColor: Colors.blue.withAlpha(30),
                             onTap: () {
-                              print('Card tapped:' + recompensa.nome);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) =>

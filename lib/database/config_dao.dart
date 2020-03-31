@@ -1,6 +1,4 @@
 import 'package:fazedor/model/saldo.dart';
-import 'package:fazedor/model/tarefa.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'app_database.dart';
@@ -19,7 +17,6 @@ class ConfigDAO {
   void atualizaSaldo(int valor) async {
     final Database db = await getDatabase();
     db.execute("UPDATE SALDO SET valor = valor + $valor");
-    debugPrint('atualiza saldo');
   }
 
 //  Future<List<Saldo>> findAllSaldo() async {
@@ -41,10 +38,10 @@ class ConfigDAO {
   List<Saldo> _toListSaldo(List<Map<String, dynamic>> result) {
     final List<Saldo> tarefas = List();
     for (Map<String, dynamic> row in result) {
-      final Saldo contact = Saldo(
+      final Saldo saldo = Saldo(
         row['valor'],
       );
-      tarefas.add(contact);
+      tarefas.add(saldo);
     }
     return tarefas;
   }

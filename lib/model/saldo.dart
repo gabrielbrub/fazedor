@@ -1,5 +1,5 @@
 class Saldo{
-  int valor;
+  int valor=0;
 
   Saldo(this.valor);
 

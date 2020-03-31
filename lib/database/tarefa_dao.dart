@@ -22,40 +22,36 @@ class TarefaDAO {
 
   Future<int> save(Tarefa tarefa) async {
     final Database db = await getDatabase();
-    Map<String, dynamic> contactMap = _toMap(tarefa);
-    debugPrint('save chamado - ' + tarefa.valor.toString());
-    return db.insert(_tableName, contactMap);
+    Map<String, dynamic> tarefaMap = _toMap(tarefa);
+    return db.insert(_tableName, tarefaMap);
   }
 
 //  Future<int> update(Tarefa tarefa) async {
 //    final Database db = await getDatabase();
 //    Map<String, dynamic> tarefaMap = _toMap(tarefa);
-//    debugPrint('update chamado');
 //    return db.update(_tableName, tarefaMap);
 //  }
 
   Future<List<Tarefa>> findAll() async {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query(_tableName);
-    List<Tarefa> contacts = _toList(result);
-    debugPrint('findall chamado');
-    return contacts;
+    List<Tarefa> tarefas = _toList(result);
+    return tarefas;
   }
 
-  Future<int> update(Tarefa contact) async {
+  Future<int> update(Tarefa tarefa) async {
     final Database db = await getDatabase();
-    final Map<String, dynamic> contactMap = _toMap(contact);
+    final Map<String, dynamic> tarefaMap = _toMap(tarefa);
     return db.update(
       _tableName,
-      contactMap,
+      tarefaMap,
       where: 'id = ?',
-      whereArgs: [contact.id],
+      whereArgs: [tarefa.id],
     );
   }
 
   Future<int> delete(int id) async {
     final Database db = await getDatabase();
-    debugPrint('delete chamado');
     return db.delete(
       _tableName,
       where: 'id = ?',
@@ -64,25 +60,25 @@ class TarefaDAO {
   }
 
   Map<String, dynamic> _toMap(Tarefa tarefa) {
-    final Map<String, dynamic> contactMap = Map();
-    contactMap[_name] = tarefa.nome;
-    contactMap[_description] = tarefa.descricao;
-    contactMap[_value] = tarefa.valor;
-    contactMap[_disposable] = tarefa.descartavel == true ? 1 : 0;
-    return contactMap;
+    final Map<String, dynamic> tarefaMap = Map();
+    tarefaMap[_name] = tarefa.nome;
+    tarefaMap[_description] = tarefa.descricao;
+    tarefaMap[_value] = tarefa.valor;
+    tarefaMap[_disposable] = tarefa.descartavel == true ? 1 : 0;
+    return tarefaMap;
   }
 
   List<Tarefa> _toList(List<Map<String, dynamic>> result) {
     final List<Tarefa> tarefas = List();
     for (Map<String, dynamic> row in result) {
-      final Tarefa contact = Tarefa(
+      final Tarefa tarefa = Tarefa(
         row[_id],
         row[_name],
         row[_description],
         row[_value],
         row[_disposable] == 1 ? true : false,
       );
-      tarefas.add(contact);
+      tarefas.add(tarefa);
     }
     return tarefas;
   }

@@ -37,7 +37,6 @@ class _TelaHistoricoState extends State<TelaHistorico> {
             historicos = snapshot.data;
             if (historicos == null) {
               numItems = 0;
-              debugPrint(numItems.toString() + 'NUMITEMS 0');
             } else {
               numItems = historicos.length;
               historicos = historicos.reversed.toList();

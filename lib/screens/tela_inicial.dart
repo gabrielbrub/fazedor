@@ -77,7 +77,6 @@ class _initial_screenState extends State<InitialScreen> {
   void callback() {
     setState(() {
       //currentPage = MostraSaldo();
-      debugPrint('CALLBACK');
     });
   }
 
@@ -96,29 +95,8 @@ class _initial_screenState extends State<InitialScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('deu build');
     return Scaffold(
       appBar: AppBar(
-//        leading: GestureDetector(
-//          child: Icon(Icons.attach_money),
-//          onTap: () {
-//            showDialog(
-//              context: context,
-//              builder: (BuildContext context) {
-//                return AlertDialog(
-//                  title: Text("Saldo"),
-//                  content: AmostraSaldo(),
-//                  actions: [
-//                    FlatButton(
-//                      child: Text("OK"),
-//                      onPressed: () { Navigator.pop(context);},
-//                    ),
-//                  ],
-//                );
-//              },
-//            );
-//          },
-//        ),
         actions: [
           Builder(
             builder: (context) => IconButton(
@@ -271,7 +249,6 @@ class ExibeSaldo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('build do Amostra saldo');
     return FutureBuilder(
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {

@@ -1,5 +1,3 @@
-import 'package:fazedor/model/saldo.dart';
-import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/recompensa.dart';
@@ -22,9 +20,8 @@ class RecompensaDAO {
 
   Future<int> save(Recompensa recompensa) async {
     final Database db = await getDatabase();
-    Map<String, dynamic> contactMap = _toMap(recompensa);
-    debugPrint('save chamado - recompensa');
-    return db.insert(_tableName, contactMap);
+    Map<String, dynamic> recompensaMap = _toMap(recompensa);
+    return db.insert(_tableName, recompensaMap);
   }
 
   Future<int> delete(int id) async {
@@ -39,33 +36,32 @@ class RecompensaDAO {
   Future<List<Recompensa>> findAll() async {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query(_tableName);
-    List<Recompensa> contacts = _toList(result);
-    debugPrint('findall chamado- recompensa');
-    return contacts;
+    List<Recompensa> recompensas = _toList(result);
+    return recompensas;
   }
 
-  Map<String, dynamic> _toMap(Recompensa tarefa) {
-    final Map<String, dynamic> contactMap = Map();
-    contactMap[_name] = tarefa.nome;
-    contactMap[_description] = tarefa.descricao;
-    contactMap[_value] = tarefa.valor;
-    contactMap[_disposable] = tarefa.descartavel == true ? 1 : 0;
-    return contactMap;
+  Map<String, dynamic> _toMap(Recompensa recompensa) {
+    final Map<String, dynamic> recompensaMap = Map();
+    recompensaMap[_name] = recompensa.nome;
+    recompensaMap[_description] = recompensa.descricao;
+    recompensaMap[_value] = recompensa.valor;
+    recompensaMap[_disposable] = recompensa.descartavel == true ? 1 : 0;
+    return recompensaMap;
   }
 
   List<Recompensa> _toList(List<Map<String, dynamic>> result) {
-    final List<Recompensa> contacts = List();
+    final List<Recompensa> recompensas = List();
     for (Map<String, dynamic> row in result) {
-      final Recompensa contact = Recompensa(
+      final Recompensa recompensa = Recompensa(
         row[_id],
         row[_name],
         row[_description],
         row[_value],
         row[_disposable] == 1 ? true : false,
       );
-      contacts.add(contact);
+      recompensas.add(recompensa);
     }
-    return contacts;
+    return recompensas;
   }
 
   Future<int> update(Recompensa recompensa) async {
