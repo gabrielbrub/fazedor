@@ -170,7 +170,6 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // retorna um objeto do tipo Dialog
         return AlertDialog(
           content: Text(
               "Tem certeza que deseja remover ${tarefa
@@ -207,23 +206,23 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
     );
   }
 
-  Widget menu(Recompensa tarefa,int index){
+  Widget menu(Recompensa recompensa,int index){
     return PopupMenuButton<int>(
       onSelected: (int result){
         switch(result){
           case 1:
             var now = new DateTime.now();
             final Historico historico =
-            Historico(tarefa.nome, 1, now, null, tarefa.valor);
+            Historico(recompensa.nome, 0, now, null, recompensa.valor);
             _daoHistorico.save(historico);
-            _daoConfig.atualizaSaldo(-tarefa.valor);
-            debugPrint(tarefa.valor.toString());
-            if (tarefa.descartavel == true) {
-              _dao.delete(tarefa.id);
+            _daoConfig.atualizaSaldo(-recompensa.valor);
+            debugPrint(recompensa.valor.toString());
+            if (recompensa.descartavel == true) {
+              _dao.delete(recompensa.id);
             }
             Fluttertoast.showToast(
                 msg: "Recompensa Resgatada: - " +
-                    tarefa.valor.toString(),
+                    recompensa.valor.toString(),
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
@@ -236,7 +235,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
             });
             break;
           case 2:
-            _showDialog(tarefa, index);
+            _showDialog(recompensa, index);
             break;
         }
       },

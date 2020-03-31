@@ -1,7 +1,5 @@
 import 'package:fazedor/model/historico.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:flutter/foundation.dart';
-
 import 'app_database.dart';
 
 class HistoricoDAO {

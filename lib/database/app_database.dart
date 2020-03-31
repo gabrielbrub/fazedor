@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import 'config_dao.dart';
 import 'historico_dao.dart';
 import 'tarefa_dao.dart';
