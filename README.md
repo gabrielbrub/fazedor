@@ -1,16 +1,21 @@
 # fazedor
+(Não concluído)
 
-A new Flutter application.
+Aplicativo de produtividade: crie tarefas e recompensas, atribua valores e controle seu tempo.
+Meu primeiro app em Flutter, comecei a fazer enquanto assistia o curso. Ainda há espaço para
+melhorias, em funcionalidade e, principalmente, no código.
 
-## Getting Started
+## Capturas de Tela
 
-This project is a starting point for a Flutter application.
+<p float="left" align="middle" hspace="20"">
+  <img src="https://i.imgur.com/VqlwfYK.jpg" height="740" width="360" />
+  <img src="https://i.imgur.com/eoNVwna.jpg" height="740" width="360" /> 
+</p>
 
-A few resources to get you started if this is your first Flutter project:
+## Feito com
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+* [Android Studio](https://developer.android.com/studio)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Autor
+
+* **Gabriel Rubião** - [gabrielbrub](https://github.com/gabrielbrub)
