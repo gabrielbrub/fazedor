@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-
 import '../model/recompensa.dart';
 import 'app_database.dart';
 
@@ -66,10 +65,10 @@ class RecompensaDAO {
 
   Future<int> update(Recompensa recompensa) async {
     final Database db = await getDatabase();
-    final Map<String, dynamic> contactMap = _toMap(recompensa);
+    final Map<String, dynamic> recompensaMap = _toMap(recompensa);
     return db.update(
       _tableName,
-      contactMap,
+      recompensaMap,
       where: 'id = ?',
       whereArgs: [recompensa.id],
     );

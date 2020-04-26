@@ -1,11 +1,11 @@
-import 'package:fazedor/database/tarefa_dao.dart';
+
 import 'package:fazedor/database/recompensa_dao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../widgets/editor.dart';
 import '../model/recompensa.dart';
-import '../model/tarefa.dart';
+
 
 final _tituloAppBar = 'Editar Recompensa';
 
@@ -100,7 +100,6 @@ class _EditorRecompensaState extends State<EditorRecompensa> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     descartavel = widget.recompensa.descartavel;
     _controladorCampoNome.text = widget.recompensa.nome;
@@ -117,7 +116,6 @@ class _EditorRecompensaState extends State<EditorRecompensa> {
     if (nome != null && valor != null) {
       final recompensaSalva = Recompensa(id, nome, descricao, valor.toInt(), descartavel);
       _dao.update(recompensaSalva).then((id) => Navigator.pop(context));
-      //Navigator.pop(context, tarefaSalva);
     }
   }
 }

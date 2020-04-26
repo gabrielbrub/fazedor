@@ -1,6 +1,6 @@
-import 'package:fazedor/model/saldo.dart';
+
 import 'package:fazedor/model/tarefa.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 import 'app_database.dart';
@@ -26,11 +26,6 @@ class TarefaDAO {
     return db.insert(_tableName, tarefaMap);
   }
 
-//  Future<int> update(Tarefa tarefa) async {
-//    final Database db = await getDatabase();
-//    Map<String, dynamic> tarefaMap = _toMap(tarefa);
-//    return db.update(_tableName, tarefaMap);
-//  }
 
   Future<List<Tarefa>> findAll() async {
     final Database db = await getDatabase();

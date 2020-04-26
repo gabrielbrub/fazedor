@@ -95,7 +95,6 @@ class _EditorTarefaState extends State<EditorTarefa> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     descartavel = widget.tarefa.descartavel;
     _controladorCampoNome.text = widget.tarefa.nome;
@@ -111,7 +110,6 @@ class _EditorTarefaState extends State<EditorTarefa> {
     if (nome != null && valor != null) {
       final tarefaSalva = Tarefa(id, nome, descricao, valor.toInt(), descartavel);
       _dao.update(tarefaSalva).then((id) => Navigator.pop(context));
-      //Navigator.pop(context, tarefaSalva);
     }
   }
 }

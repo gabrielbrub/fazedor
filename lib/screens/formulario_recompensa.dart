@@ -1,5 +1,5 @@
 import 'package:fazedor/database/recompensa_dao.dart';
-import 'package:flutter/foundation.dart';
+
 
 import 'package:fazedor/widgets/editor.dart';
 import 'package:fazedor/model/recompensa.dart';
@@ -31,7 +31,7 @@ class FormularioRecompensaState extends State<FormularioRecompensa> {
   final TextEditingController _controladorCampoValor = TextEditingController();
   final TextEditingController _controladorCampoDescricao = TextEditingController();
   final RecompensaDAO _dao = RecompensaDAO();
-  bool descartavel = true;
+  bool _descartavel = true;
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +72,10 @@ class FormularioRecompensaState extends State<FormularioRecompensa> {
               ),
               CheckboxListTile(
                 title: const Text('Descartar ao concluir'),
-                value: descartavel,
+                value: _descartavel,
                 onChanged: (bool value) {
                   setState(() {
-                    descartavel = value;
+                    _descartavel = value;
                     timeDilation = value ? 2.0 : 1;
                   });
                 },
@@ -95,7 +95,7 @@ class FormularioRecompensaState extends State<FormularioRecompensa> {
     final double valor = double.tryParse(_controladorCampoValor.text);
     final String descricao = _controladorCampoDescricao.text;
     if (nome != null && valor != null) {
-      final recompensaSalva = Recompensa(0, nome, descricao, valor.toInt(), descartavel);
+      final recompensaSalva = Recompensa(0, nome, descricao, valor.toInt(), _descartavel);
       _dao.save(recompensaSalva).then((id) => Navigator.pop(context));
     }
   }

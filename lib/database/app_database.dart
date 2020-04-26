@@ -18,17 +18,9 @@ Future<Database> getDatabase() async {
       db.execute(RecompensaDAO.tableSql);
       debugPrint(db.getVersion().toString());
     },
-    version: 5,
-//    onDowngrade: onDatabaseDowngradeDelete,
+    version: 1,
+    //onDowngrade: onDatabaseDowngradeDelete,
     onUpgrade: (db, oldVersion, newVersion){
-//        db.execute("ALTER TABLE TAREFAS ADD COLUMN descartavel INTEGER");
-//        db.execute("ALTER TABLE RECOMPENSAS ADD COLUMN descartavel INTEGER");
-//      db.execute("ALTER TABLE SALDO RENAME TO SALDO_OLD");
-//      db.execute("CREATE TABLE SALDO (valor integer)");
-//      db.execute("INSERT INTO SALDO SELECT * FROM SALDO_OLD");
-//      db.execute("DROP TABLE SALDO_OLD");
-//      db.execute(ConfigDAO.tableSql);
-//      db.execute(HistoricoDAO.tableSql);
     },
     onOpen: (db) async {
       int ver = await db.getVersion();

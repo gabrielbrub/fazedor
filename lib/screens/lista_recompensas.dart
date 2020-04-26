@@ -10,18 +10,19 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../database/recompensa_dao.dart';
 
-List<Recompensa> recompensas;
+
 
 class TelaRecompensas extends StatefulWidget {
-  Function callback;
+  Function refresh;
 
-  TelaRecompensas(this.callback);
+  TelaRecompensas(this.refresh);
 
   @override
   _TelaRecompensasState createState() => _TelaRecompensasState();
 }
 
 class _TelaRecompensasState extends State<TelaRecompensas> {
+  List<Recompensa> recompensas;
   final RecompensaDAO _dao = RecompensaDAO();
   final ConfigDAO _daoConfig = ConfigDAO();
   final HistoricoDAO _daoHistorico = HistoricoDAO();
@@ -50,50 +51,13 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                               final bool res = await showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      content: Text(
-                                          "Tem certeza que deseja remover ${recompensa
-                                              .nome}?"),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text(
-                                            "Cancelar",
-                                            style: TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        FlatButton(
-                                          child: Text(
-                                            "Deletar",
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              recompensas.removeAt(index);
-                                            });
-                                            _dao.delete(recompensa.id);
-                                            widget.callback();
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
+                                    return RemoveDialog(recompensa, index);
                                   });
                               return res;
                             } else {
                               String saldo = await _daoConfig.findSaldo();
                               if(recompensa.valor > int.parse(saldo)) {
-                                Fluttertoast.showToast(
-                                  msg: 'Saldo insuficiente.',
-                                  backgroundColor: Colors.red[400],
-                                  toastLength: Toast.LENGTH_LONG,
-                                  timeInSecForIos: 1,
-                                  gravity: ToastGravity.BOTTOM,
-                                  textColor: Colors.white,
-                                );
+                                _saldoInsuficienteToast();
                                 return false;
                               }
                               if (recompensa.descartavel == true) {
@@ -110,23 +74,14 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                                 return false;
                               }
                               var now = new DateTime.now();
-                              final Historico historico = Historico(
+                              final Historico registro = Historico(
                                   recompensa.nome, 0, now, null,
                                   recompensa.valor);
-                              _daoHistorico.save(historico);
+                              _daoHistorico.save(registro);
                               _daoConfig.atualizaSaldo(
-                                  -recompensa.valor); //NASTY
-                              widget.callback();
-                              Fluttertoast.showToast(
-                                  msg: "Recompensa Resgatada: - " +
-                                      recompensa.valor.toString(),
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIos: 1,
-                                  backgroundColor: Colors.orange[500],
-                                  textColor: Colors.white,
-                                  fontSize: 16.0
-                              );
+                                  -recompensa.valor);
+                              widget.refresh();
+                              _recompensaResgatadaToast(recompensa);
                               setState(() {
                                 recompensas.removeAt(index);
                               });
@@ -143,7 +98,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                               );
                             },
                             child: ListTile(
-                              leading: _itemIcon(recompensa.descartavel),
+                              leading: recompensa.descartavel ? Icon(Icons.check) : Icon(Infinity.infinity),
                               title: Text(recompensa.nome.toString(),
                                 style: TextStyle(fontSize: 18.0),),
                               subtitle: Text(recompensa.valor.toString()),
@@ -166,13 +121,13 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
     );
   }
 
-  void _showDialog(Recompensa tarefa, int index) {
+  void _showDialog(Recompensa recompensa, int index) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Text(
-              "Tem certeza que deseja remover ${tarefa
+              "Tem certeza que deseja remover ${recompensa
                   .nome}?"),
           actions: <Widget>[
             FlatButton(
@@ -195,8 +150,8 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                 setState(() {
                   recompensas.removeAt(index);
                 });
-                _dao.delete(tarefa.id);
-                widget.callback();
+                _dao.delete(recompensa.id);
+                widget.refresh();
                 Navigator.of(context).pop();
               },
             ),
@@ -208,31 +163,26 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
 
   Widget menu(Recompensa recompensa,int index){
     return PopupMenuButton<int>(
-      onSelected: (int result){
+      onSelected: (int result) async{
         switch(result){
           case 1:
+            String saldo = await _daoConfig.findSaldo();
+            if(int.parse(saldo) < recompensa.valor){
+              _saldoInsuficienteToast();
+              break;
+            }
             var now = new DateTime.now();
-            final Historico historico =
+            final Historico registro =
             Historico(recompensa.nome, 0, now, null, recompensa.valor);
-            _daoHistorico.save(historico);
+            _daoHistorico.save(registro);
             _daoConfig.atualizaSaldo(-recompensa.valor);
             debugPrint(recompensa.valor.toString());
-            if (recompensa.descartavel == true) {
+            if (recompensa.descartavel) {
               _dao.delete(recompensa.id);
+              _recompensaResgatadaToast(recompensa);
+              setState(() {
+              });
             }
-            Fluttertoast.showToast(
-                msg: "Recompensa Resgatada: - " +
-                    recompensa.valor.toString(),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
-                backgroundColor: Colors.orange[500],
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            setState(() {
-
-            });
             break;
           case 2:
             _showDialog(recompensa, index);
@@ -251,95 +201,128 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
       ],
     );
   }
-}
 
+  void _saldoInsuficienteToast() {
+    Fluttertoast.showToast(
+      msg: 'Saldo insuficiente.',
+      backgroundColor: Colors.red[400],
+      toastLength: Toast.LENGTH_LONG,
+      timeInSecForIos: 1,
+      gravity: ToastGravity.BOTTOM,
+      textColor: Colors.white,
+    );
+  }
 
+  void _recompensaResgatadaToast(Recompensa recompensa) {
+    Fluttertoast.showToast(
+        msg: "Recompensa Resgatada: - " +
+            recompensa.valor.toString(),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.orange[500],
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
 
-
-Widget slideRightBackground() {
-  return Container(
-    color: Colors.orange[500],
-    child: Align(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            width: 20,
-          ),
-          Icon(
-            Icons.check_circle,
-            color: Colors.white,
-          ),
-          Text(
-            "Resgatar",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
+  Widget slideRightBackground() {
+    return Container(
+      color: Colors.orange[500],
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 20,
             ),
-            textAlign: TextAlign.left,
-          ),
-        ],
-      ),
-      alignment: Alignment.centerLeft,
-    ),
-  );
-}
-
-Widget slideLeftBackground() {
-  return Container(
-    color: Colors.red,
-    child: Align(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Icon(
-            Icons.delete,
-            color: Colors.white,
-          ),
-          Text(
-            " Deletar",
-            style: TextStyle(
+            Icon(
+              Icons.check_circle,
               color: Colors.white,
-              fontWeight: FontWeight.w700,
             ),
-            textAlign: TextAlign.right,
-          ),
-          SizedBox(
-            width: 20,
-          ),
-        ],
+            Text(
+              "Resgatar",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
       ),
-      alignment: Alignment.centerRight,
-    ),
-  );
+    );
+  }
+
+  Widget slideLeftBackground() {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            Text(
+              " Deletar",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.right,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    );
+  }
+
+  Widget RemoveDialog(Recompensa recompensa, int index){
+    return AlertDialog(
+      content: Text(
+          "Tem certeza que deseja remover ${recompensa
+              .nome}?"),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            "Cancelar",
+            style: TextStyle(
+                color: Colors.black),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        FlatButton(
+          child: Text(
+            "Deletar",
+            style: TextStyle(color: Colors.red),
+          ),
+          onPressed: () {
+            setState(() {
+              recompensas.removeAt(index);
+            });
+            _dao.delete(recompensa.id);
+            widget.refresh();
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
 }
 
 
 
 
-
-//class _ItemRecompensa extends StatelessWidget {
-//  final Recompensa _recompensa;
-//
-//  _ItemRecompensa(this._recompensa);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Card(
-//        child: ListTile(
-//          leading: Icon(Icons.work),
-//          title: Text(_recompensa.nome.toString()),
-//          subtitle: Text(_recompensa.valor.toString()),
-//        ));
-//  }
-//}
-
-Widget _itemIcon (bool isDescartavel){
-    if (isDescartavel == true) {
-      return Icon(Icons.check);
-    }
-    return Icon(Infinity.infinity);
-}
 
 
 

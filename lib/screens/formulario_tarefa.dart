@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 
 import '../database/tarefa_dao.dart';
 import '../widgets/editor.dart';
@@ -49,7 +49,6 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
                 dica: _dicaCampoNome,
                 rotulo: _rotuloCampoNome,
                 limite: 40,
-                //tipo: TextInputType.text,
               ),
               Editor(
                 dica: _dicaCampoValor,
@@ -100,7 +99,6 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
     if (nome != null && valor != null) {
       final tarefaSalva = Tarefa(0, nome, descricao, valor.toInt(), descartavel);
       _dao.save(tarefaSalva).then((id) => Navigator.pop(context));
-      //Navigator.pop(context, tarefaSalva);
     }
   }
 }

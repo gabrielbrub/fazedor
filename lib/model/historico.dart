@@ -15,9 +15,8 @@ class Historico{
       String formatted = formatter.format(data);
       debugPrint('formatted: ' + formatted);
       return formatted;
-    }else{
-      return data;
     }
+      return data;
   }
 
   Historico(String nome, int isTarefa, var data, int id, int valor){

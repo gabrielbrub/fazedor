@@ -4,15 +4,15 @@ import 'package:fazedor/screens/lista_historico.dart';
 import 'package:fazedor/screens/lista_recompensas.dart';
 import 'package:fazedor/screens/formulario_tarefa.dart';
 import 'package:fazedor/screens/formulario_recompensa.dart';
-import 'package:fazedor/model/tarefa.dart';
 import 'package:flutter/material.dart';
 import 'lista_tarefas.dart';
 import '../database/tarefa_dao.dart';
-import '../model/saldo.dart';
+
 import 'package:fazedor/my_flutter_app_icons.dart';
 
 class InitialScreen extends StatefulWidget {
   bool isDark;
+
   InitialScreen(this.isDark);
 
   @override
@@ -25,41 +25,32 @@ class _initial_screenState extends State<InitialScreen> {
   final TarefaDAO _dao = TarefaDAO();
   final ConfigDAO _daoConfig = ConfigDAO();
   bool visivel = true;
-  String saldo;
-  bool _themeSwitch = true;
+  String saldo = '';
 
   TelaProjeto telaProjeto;
   TelaRecompensas telaRecompensas;
   TelaHistorico telaHistorico;
 
-  Widget currentPage;
 
-  //static TelaProjeto telaProjetos = TelaProjeto();
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   Text _nomeTela = Text('Tarefas');
 
-//  List<Widget> _widgetOptionsBody = <Widget>[
-//    TelaProjeto((){}),
-//    TelaRecompensas((){}),
-//  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      //selecao = _widgetOptionsBody.elementAt(_selectedIndex);
       switch (index) {
         case 0:
           {
             visivel = true;
-            selecao = TelaProjeto(this.callback);
+            selecao = TelaProjeto(this.refresh);
             _nomeTela = Text('Tarefas');
           }
           break;
         case 1:
           {
             visivel = true;
-            selecao = TelaRecompensas(this.callback);
+            selecao = TelaRecompensas(this.refresh);
             _nomeTela = Text('Recompensas');
           }
           break;
@@ -74,23 +65,25 @@ class _initial_screenState extends State<InitialScreen> {
     });
   }
 
-  void callback() {
-    setState(() {
-      //currentPage = MostraSaldo();
-    });
+  void refresh() {
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
+    getSaldo();
     setState(() {
       _selectedIndex = 0;
       telaHistorico = TelaHistorico();
-      telaProjeto = TelaProjeto(this.callback);
-      telaRecompensas = TelaRecompensas(this.callback);
+      telaProjeto = TelaProjeto(this.refresh);
+      telaRecompensas = TelaRecompensas(this.refresh);
       selecao = telaProjeto;
-      //currentPage = MostraSaldo();
     });
+  }
+
+  void getSaldo() async {
+    saldo = await _daoConfig.findSaldo();
   }
 
   @override
@@ -106,11 +99,8 @@ class _initial_screenState extends State<InitialScreen> {
             ),
           ),
         ],
-
         centerTitle: true,
         title: _nomeTela,
-        //backgroundColor: Colors.blue,
-        //leading: currentPage,
       ),
       endDrawer: Drawer(
           child: ListView(
@@ -140,8 +130,7 @@ class _initial_screenState extends State<InitialScreen> {
                         ),
                       ],
                     ),
-                    ExibeSaldo(),
-                    //Text("Saldo", style: TextStyle(color: Colors.white, fontSize: 18),),
+                    Text(saldo),
                   ]),
             ),
             decoration: BoxDecoration(
@@ -182,7 +171,10 @@ class _initial_screenState extends State<InitialScreen> {
               title: const Text('Modo Escuro'),
               value: widget.isDark,
               onChanged: (bool value) {
-                setState(() {DynamicTheme.of(context).setBrightness(value ? Brightness.dark : Brightness.light);}); //TEMA ESCURO
+                setState(() {
+                  DynamicTheme.of(context).setBrightness(
+                      value ? Brightness.dark : Brightness.light);
+                });
               },
               secondary: const Icon(Icons.lightbulb_outline),
             ),
@@ -239,34 +231,6 @@ class _initial_screenState extends State<InitialScreen> {
           },
         ),
       ),
-    );
-  }
-}
-
-class ExibeSaldo extends StatelessWidget {
-  String saldo = '';
-  final ConfigDAO _daoConfig = ConfigDAO();
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Text('');
-          case ConnectionState.active:
-          case ConnectionState.waiting:
-            return Text('');
-          case ConnectionState.done:
-            saldo = snapshot.data;
-            return Text(
-              'Saldo: ' + saldo,
-              style: TextStyle(fontSize: 16, color: Colors.white),
-            );
-        }
-        return null;
-      },
-      future: _daoConfig.findSaldo(),
     );
   }
 }
