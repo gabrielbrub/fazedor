@@ -11,9 +11,6 @@ import '../database/tarefa_dao.dart';
 import 'package:fazedor/infinity_icon.dart';
 
 class TelaProjeto extends StatefulWidget {
-  Function refresh;
-
-  TelaProjeto(this.refresh);
 
   @override
   TelaProjetoState createState() => TelaProjetoState();
@@ -101,7 +98,6 @@ class TelaProjetoState extends State<TelaProjeto> {
               tarefas.removeAt(index);
             });
             _dao.delete(tarefa.id);
-            widget.refresh();
             Navigator.of(context).pop();
           },
         ),

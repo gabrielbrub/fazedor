@@ -25,12 +25,11 @@ class _initial_screenState extends State<InitialScreen> {
   final TarefaDAO _dao = TarefaDAO();
   final ConfigDAO _daoConfig = ConfigDAO();
   bool visivel = true;
-  String saldo = '';
+  Future<String> saldo;
 
   TelaProjeto telaProjeto;
   TelaRecompensas telaRecompensas;
   TelaHistorico telaHistorico;
-
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -43,21 +42,21 @@ class _initial_screenState extends State<InitialScreen> {
         case 0:
           {
             visivel = true;
-            selecao = TelaProjeto(this.refresh);
+            selecao = telaProjeto; //TelaProjeto(this.refresh);
             _nomeTela = Text('Tarefas');
           }
           break;
         case 1:
           {
             visivel = true;
-            selecao = TelaRecompensas(this.refresh);
+            selecao = telaRecompensas; //TelaRecompensas(this.refresh);
             _nomeTela = Text('Recompensas');
           }
           break;
         case 2:
           {
             visivel = false;
-            selecao = TelaHistorico();
+            selecao = telaHistorico; //TelaHistorico();
             _nomeTela = Text('Histórico');
           }
           break;
@@ -66,24 +65,25 @@ class _initial_screenState extends State<InitialScreen> {
   }
 
   void refresh() {
-    setState(() {});
+
   }
 
   @override
   void initState() {
     super.initState();
-    getSaldo();
+    saldo = getSaldo();
     setState(() {
       _selectedIndex = 0;
       telaHistorico = TelaHistorico();
-      telaProjeto = TelaProjeto(this.refresh);
-      telaRecompensas = TelaRecompensas(this.refresh);
+      telaProjeto = TelaProjeto();
+      telaRecompensas = TelaRecompensas();
       selecao = telaProjeto;
     });
   }
 
-  void getSaldo() async {
-    saldo = await _daoConfig.findSaldo();
+  Future<String> getSaldo() async {
+    saldo = _daoConfig.findSaldo();
+    return saldo;
   }
 
   @override
@@ -94,7 +94,12 @@ class _initial_screenState extends State<InitialScreen> {
           Builder(
             builder: (context) => IconButton(
               icon: Icon(Icons.settings),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
+              onPressed: () {
+                setState(() {
+                  saldo = getSaldo();
+                });
+                Scaffold.of(context).openEndDrawer();
+                },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             ),
           ),
@@ -130,7 +135,19 @@ class _initial_screenState extends State<InitialScreen> {
                         ),
                       ],
                     ),
-                    Text(saldo),
+//                    Text(saldo),
+                    FutureBuilder<String>(
+                      future: saldo,
+                      builder: (context, snapshot) {
+                        print('GET SALDO');
+                        if (snapshot.hasData) {
+                          return Text(snapshot.data);
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return CircularProgressIndicator();
+                      },
+                    ),
                   ]),
             ),
             decoration: BoxDecoration(

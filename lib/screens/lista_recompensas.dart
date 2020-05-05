@@ -13,10 +13,6 @@ import '../database/recompensa_dao.dart';
 
 
 class TelaRecompensas extends StatefulWidget {
-  Function refresh;
-
-  TelaRecompensas(this.refresh);
-
   @override
   _TelaRecompensasState createState() => _TelaRecompensasState();
 }
@@ -80,7 +76,6 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                               _daoHistorico.save(registro);
                               _daoConfig.atualizaSaldo(
                                   -recompensa.valor);
-                              widget.refresh();
                               _recompensaResgatadaToast(recompensa);
                               setState(() {
                                 recompensas.removeAt(index);
@@ -151,7 +146,6 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                   recompensas.removeAt(index);
                 });
                 _dao.delete(recompensa.id);
-                widget.refresh();
                 Navigator.of(context).pop();
               },
             ),
@@ -310,7 +304,6 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
               recompensas.removeAt(index);
             });
             _dao.delete(recompensa.id);
-            widget.refresh();
             Navigator.of(context).pop();
           },
         ),
