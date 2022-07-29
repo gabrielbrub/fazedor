@@ -1,4 +1,4 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fazedor/database/config_dao.dart';
 import 'package:fazedor/screens/lista_historico.dart';
 import 'package:fazedor/screens/lista_recompensas.dart';
@@ -22,17 +22,15 @@ class InitialScreen extends StatefulWidget {
 class _initial_screenState extends State<InitialScreen> {
   int _selectedIndex = 0;
   Widget selecao;
-  final TarefaDAO _dao = TarefaDAO();
   final ConfigDAO _daoConfig = ConfigDAO();
   bool visivel = true;
   Future<String> saldo;
+  bool isDark;
 
   TelaProjeto telaProjeto;
   TelaRecompensas telaRecompensas;
   TelaHistorico telaHistorico;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   Text _nomeTela = Text('Tarefas');
 
   void _onItemTapped(int index) {
@@ -64,13 +62,10 @@ class _initial_screenState extends State<InitialScreen> {
     });
   }
 
-  void refresh() {
-
-  }
-
   @override
   void initState() {
     super.initState();
+    isDark = widget.isDark;
     saldo = getSaldo();
     setState(() {
       _selectedIndex = 0;
@@ -99,7 +94,7 @@ class _initial_screenState extends State<InitialScreen> {
                   saldo = getSaldo();
                 });
                 Scaffold.of(context).openEndDrawer();
-                },
+              },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             ),
           ),
@@ -166,7 +161,7 @@ class _initial_screenState extends State<InitialScreen> {
                       title: Text("Deseja apagar tudo?"),
                       content: Text('Essa operação não tem volta.'),
                       actions: [
-                        FlatButton(
+                        ElevatedButton(
                           child: Text("OK"),
                           onPressed: () {
                             _daoConfig.apaga();
@@ -186,11 +181,15 @@ class _initial_screenState extends State<InitialScreen> {
           Card(
             child: SwitchListTile(
               title: const Text('Modo Escuro'),
-              value: widget.isDark,
+              value: isDark,
               onChanged: (bool value) {
                 setState(() {
-                  DynamicTheme.of(context).setBrightness(
-                      value ? Brightness.dark : Brightness.light);
+                  isDark = value;
+                  if (value) {
+                    AdaptiveTheme.of(context).setDark();
+                  } else {
+                    AdaptiveTheme.of(context).setLight();
+                  }
                 });
               },
               secondary: const Icon(Icons.lightbulb_outline),
@@ -205,15 +204,15 @@ class _initial_screenState extends State<InitialScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.playlist_add_check),
-            title: Text('Tarefas'),
+            label: 'Tarefas',
           ),
           BottomNavigationBarItem(
             icon: Icon(MyFlutterApp.award),
-            title: Text('Recompensas'),
+            label: 'Recompensas',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
-            title: Text('Histórico'),
+            label: 'Histórico',
           ),
         ],
         currentIndex: _selectedIndex,

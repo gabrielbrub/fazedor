@@ -64,7 +64,6 @@ class _EditorTarefaState extends State<EditorTarefa> {
                   child: TextField(
                     maxLines: 7,
                     maxLength: 300,
-                    maxLengthEnforced: true,
                     controller: _controladorCampoDescricao,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -84,7 +83,7 @@ class _EditorTarefaState extends State<EditorTarefa> {
                 },
                 secondary: const Icon(Icons.delete),
               ),
-              RaisedButton(
+              ElevatedButton(
                 child: Text(_textoBotaoConfirmar),
                 onPressed: () => _updateTarefa(context),
               ),

@@ -1,4 +1,4 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/tela_inicial.dart';
@@ -16,16 +16,16 @@ class Fazedor extends StatelessWidget {
       systemNavigationBarColor: Colors.black, // navigation bar color
        // status bar color
     ));
-    // TODO: implement build
-    return DynamicTheme(
-      defaultBrightness: Brightness.light,
-      data: (brightness) => brightness == Brightness.dark ? dark() : light(),
-      themedWidgetBuilder: (context, theme) {
-        return MaterialApp(
-          theme: theme,
-          home: InitialScreen(isDark),
-        );
-      },
+    return AdaptiveTheme(
+      light: light(),
+      dark: dark(),
+      initial: AdaptiveThemeMode.light,
+      builder: (theme, darkTheme) => MaterialApp(
+        title: 'Adaptive Theme Demo',
+        theme: theme,
+        darkTheme: darkTheme,
+        home: InitialScreen(isDark),
+      ),
     );
   }
 

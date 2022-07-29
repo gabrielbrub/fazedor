@@ -123,7 +123,7 @@ class TelaProjetoState extends State<TelaProjeto> {
                 msg: "Tarefa Concluída: + " + tarefa.valor.toString(),
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
+                timeInSecForIosWeb: 1,
                 backgroundColor: Colors.green[500],
                 textColor: Colors.white,
                 fontSize: 16.0);

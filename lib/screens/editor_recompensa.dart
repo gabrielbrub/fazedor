@@ -69,7 +69,6 @@ class _EditorRecompensaState extends State<EditorRecompensa> {
                   child: TextField(
                     maxLines: 7,
                     maxLength: 300,
-                    maxLengthEnforced: true,
                     controller: _controladorCampoDescricao,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),

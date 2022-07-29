@@ -63,7 +63,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
                                   msg: '${recompensa.nome} não é descartável.',
                                   backgroundColor: Colors.red[400],
                                   toastLength: Toast.LENGTH_SHORT,
-                                  timeInSecForIos: 1,
+                                  timeInSecForIosWeb: 1,
                                   gravity: ToastGravity.BOTTOM,
                                   textColor: Colors.white,
                                 );
@@ -201,7 +201,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
       msg: 'Saldo insuficiente.',
       backgroundColor: Colors.red[400],
       toastLength: Toast.LENGTH_LONG,
-      timeInSecForIos: 1,
+      timeInSecForIosWeb: 1,
       gravity: ToastGravity.BOTTOM,
       textColor: Colors.white,
     );
@@ -213,7 +213,7 @@ class _TelaRecompensasState extends State<TelaRecompensas> {
             recompensa.valor.toString(),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
+        timeInSecForIosWeb: 1,
         backgroundColor: Colors.orange[500],
         textColor: Colors.white,
         fontSize: 16.0
